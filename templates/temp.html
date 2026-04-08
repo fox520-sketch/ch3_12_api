@@ -1,0 +1,59 @@
+ <div style="text-align:center; margin-top: 20px;">
+            {% comment %} 最前面 {% endcomment %}
+            {% if page_obj.has_previous %}
+                <a href="?page=1">最前頁</a>
+            
+            {% else %}
+                <span>最前頁</span>
+
+            {% endif %}
+
+            {% comment %} 上一頁 {% endcomment %}
+
+            {% comment %} {% if page_obj.has_previous %}
+                <a href="?page= {{ page_obj.previous_page_number }}">上一頁</a>
+            
+            {% else %}
+                <span>上一頁</span>
+            
+            {% endif %} {% endcomment %}
+
+
+            {% comment %} {% for num in page_obj.paginator.page_range  %}
+                {% if page_obj.number == num %}
+                    <strong>{{ num }}</strong>
+                {% else %}
+                    <a href="?page={{ num }}">{{ num }}</a>   
+                {% endif %}
+            {% endfor %} {% endcomment %}
+
+        </div>
+
+         <div>
+            
+                {% comment %} <div style="text-align: center; margin-top:20px;"; >
+                    {% for num in page_obj.paginator.page_range  %}
+                    
+                    {% endfor %} {% endcomment %}
+
+                    {% comment %} 下一頁 {% endcomment %}
+                    {% comment %} {% if page_obj.has_next %}
+                        <a href="?page= {{ page_obj.next_page_number }}">下一頁</a>
+                    
+                    {% else %}
+                        <span>下一頁</span>
+
+                    {% endif %} {% endcomment %}
+
+                    {% comment %} 最後頁 {% endcomment %}
+
+                    {% comment %} {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.paginator.num_pages }}">最後頁</a>
+                    
+                    {% else %}
+                        <span>最後頁</span>
+                    
+                    {% endif %} {% endcomment %}
+
+
+                {% comment %} </div> {% endcomment %} 

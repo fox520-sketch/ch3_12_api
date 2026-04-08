@@ -1,0 +1,391 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>學生資料管理系統</title>
+<style>
+    :root{
+        --blue-main: #2563eb;
+        --blue-dark: #1d4ed8;
+        --blue-light: #dbeafe;
+        --bg: #f8fbff;
+        --text: #1e293b;
+        --subtext: #64748b;
+        --border: #dbe3ef;
+        --white: #ffffff;
+        --danger: #ef4444;
+        --danger-dark: #dc2626;
+        --shadow: 0 8px 24px rgba(37, 99, 235, 0.08);
+        --radius: 14px;
+    }
+
+    *{
+        box-sizing: border-box;
+    }
+
+    body{
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(180deg, #f8fbff 0%, #eef6ff 100%);
+        color: var(--text);
+        font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    }
+
+    .page-wrapper{
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .card{
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 28px;
+    }
+
+    h1, h2, h3{
+        text-align: center;
+        margin: 0;
+    }
+
+    .title{
+        font-size: 32px;
+        color: var(--blue-dark);
+        margin-bottom: 12px;
+        letter-spacing: 1px;
+    }
+
+    .subtitle{
+        font-size: 18px;
+        font-weight: 500;
+        color: var(--subtext);
+        margin-bottom: 24px;
+    }
+
+    .subtitle a,
+    .action-link{
+        color: var(--blue-main);
+        text-decoration: none;
+        font-weight: 600;
+        transition: 0.2s;
+    }
+
+    .subtitle a:hover,
+    .action-link:hover{
+        color: var(--blue-dark);
+        text-decoration: underline;
+    }
+
+    .toolbar{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+
+    .search-form{
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        background: #f8fbff;
+        padding: 14px 16px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+    }
+
+    .search-form label{
+        color: var(--blue-dark);
+        font-weight: 600;
+    }
+
+    .search-form input[type="search"]{
+        width: 260px;
+        max-width: 100%;
+        padding: 10px 14px;
+        border: 1px solid #cbd5e1;
+        border-radius: 999px;
+        outline: none;
+        font-size: 14px;
+        transition: 0.2s;
+    }
+
+    .search-form input[type="search"]:focus{
+        border-color: var(--blue-main);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .btn{
+        display: inline-block;
+        padding: 10px 18px;
+        border: none;
+        border-radius: 999px;
+        background: var(--blue-main);
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        transition: 0.2s;
+    }
+
+    .btn:hover{
+        background: var(--blue-dark);
+    }
+
+    .table-wrap{
+        overflow-x: auto;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+    }
+
+    table{
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--white);
+        min-width: 900px;
+    }
+
+    thead{
+        background: #eff6ff;
+    }
+
+    th, td{
+        padding: 14px 12px;
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        font-size: 14px;
+    }
+
+    th{
+        color: var(--blue-dark);
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    tbody tr:hover{
+        background: #f8fbff;
+    }
+
+    .action-group{
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .btn-sm{
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: 0.2s;
+    }
+
+    .btn-edit{
+        background: #e0ecff;
+        color: var(--blue-dark);
+    }
+
+    .btn-edit:hover{
+        background: #c7ddff;
+    }
+
+    .btn-delete{
+        background: #fee2e2;
+        color: var(--danger-dark);
+    }
+
+    .btn-delete:hover{
+        background: #fecaca;
+    }
+
+    .pagination{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 24px;
+    }
+
+    .pagination a,
+    .pagination span,
+    .pagination strong{
+        min-width: 42px;
+        padding: 9px 12px;
+        border-radius: 10px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .pagination a{
+        background: #eff6ff;
+        color: var(--blue-dark);
+        border: 1px solid #dbeafe;
+        transition: 0.2s;
+    }
+
+    .pagination a:hover{
+        background: #dbeafe;
+    }
+
+    .pagination strong{
+        background: var(--blue-main);
+        color: white;
+        border: 1px solid var(--blue-main);
+    }
+
+    .pagination span{
+        background: #f8fafc;
+        color: #94a3b8;
+        border: 1px solid #e2e8f0;
+    }
+
+    .empty-state{
+        text-align: center;
+        padding: 50px 20px;
+        color: var(--subtext);
+    }
+
+    .empty-state h2{
+        color: var(--blue-dark);
+        margin-bottom: 10px;
+    }
+
+    @media (max-width: 768px){
+        .title{
+            font-size: 26px;
+        }
+
+        .subtitle{
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .card{
+            padding: 20px;
+        }
+
+        .search-form{
+            border-radius: 18px;
+        }
+
+        .search-form input[type="search"]{
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+    <div class="card">
+        <div class="head_content">
+            <h1 class="title">學生資料管理系統.........</h1>
+            <h2 class="subtitle">
+                目前資料筆數：{{ data_count }}　
+                <a href="{% url 'post' %}">＋ 新增學生資料</a>
+            </h2>
+
+            <div class="toolbar">
+                <form action="{% url 'index' %}" method="get" class="search-form">
+                    <label for="site_search">搜尋關鍵字</label>
+                    <input
+                        type="search"
+                        id="site_search"
+                        name="site_search"
+                        value="{{ request.GET.site_search }}"
+                        placeholder="請輸入學號、姓名、電話..."
+                    >
+                    <button type="submit" class="btn">搜尋</button>
+                </form>
+            </div>
+        </div>
+
+        <div>
+            {% if status %}
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>學號</th>
+                                <th>姓名</th>
+                                <th>性別</th>
+                                <th>生日</th>
+                                <th>信箱</th>
+                                <th>電話</th>
+                                <th>住址</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for data in page_obj %}
+                                <tr>
+                                    <td>{{ data.cid }}</td>
+                                    <td>{{ data.cname }}</td>
+                                    <td>
+                                        {% if data.csex == "M" %}
+                                            男
+                                        {% else %}
+                                            女
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ data.cbirthday|date:'Y-m-d' }}</td>
+                                    <td>{{ data.cemail }}</td>
+                                    <td>{{ data.cphone }}</td>
+                                    <td>{{ data.caddr }}</td>
+                                    <td>
+                                        <div class="action-group">
+                                            <a href="/edit/{{ data.cid }}/" class="btn-sm btn-edit">編輯</a>
+                                            <a href="/delete/{{ data.cid }}/" class="btn-sm btn-delete"
+                                               onclick="return confirm('確定要刪除這筆學生資料嗎？');">
+                                                刪除
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1{% if request.GET.site_search %}&site_search={{ request.GET.site_search }}{% endif %}">最前頁</a>
+                        <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.site_search %}&site_search={{ request.GET.site_search }}{% endif %}">上一頁</a>
+                    {% else %}
+                        <span>最前頁</span>
+                        <span>上一頁</span>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <strong>{{ num }}</strong>
+                        {% else %}
+                            <a href="?page={{ num }}{% if request.GET.site_search %}&site_search={{ request.GET.site_search }}{% endif %}">{{ num }}</a>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}{% if request.GET.site_search %}&site_search={{ request.GET.site_search }}{% endif %}">下一頁</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.site_search %}&site_search={{ request.GET.site_search }}{% endif %}">最後頁</a>
+                    {% else %}
+                        <span>下一頁</span>
+                        <span>最後頁</span>
+                    {% endif %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <h2>查無資料</h2>
+                    <p>{{ errormessage }}</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
